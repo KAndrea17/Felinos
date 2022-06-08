@@ -1,0 +1,68 @@
+---
+title: "Datos de felinos de Costa Rica"
+author: "Andrea Padilla"
+date: '2022-06-08'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Preparativos
+
+```{r carga-paquetes, message=FALSE}
+library(sf)
+library(dplyr)
+library(leaflet)
+library(ggplot2)
+library(plotly)
+library(DT)
+```
+
+```{r}
+felinos <-
+  st_read(
+    "C:/Users/gf0604-1/datos geoespaciales/clase 08-06-22/felinos.csv",
+    options = c(
+      "X_POSSIBLE_NAMES=decimalLongitude", # columna de longitud decimal
+      "Y_POSSIBLE_NAMES=decimalLatitude"   # columna de latitud decimal
+    ),
+    quiet = TRUE
+  )
+
+```
+
+# Tabla
+```{r}
+# Visualización de datos de felinos en formato tabular
+felinos %>%
+  dplyr::select(species,
+                eventDate,
+                stateProvince,
+                locality,
+                decimalLongitude,
+                decimalLatitude) %>%
+  st_drop_geometry() %>%
+  datatable(
+    colnames = c(
+      "Especie",
+      "Fecha",
+      "Provincia",
+      "Localidad",
+      "Longitud",
+      "Latitud"
+    ),
+    options = list(
+      pageLength = 5,
+      language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json')
+    )
+  )
+```
+
+```{r}
+
+```
+
+# Gráfico
+
+# Mapa
