@@ -33,7 +33,8 @@ felinos <-
 ```
 
 # Tabla
-```{r}
+
+```{r Tabla, echo=FALSE}
 # Visualización de datos de felinos en formato tabular
 felinos %>%
   dplyr::select(species,
@@ -53,7 +54,7 @@ felinos %>%
       "Latitud"
     ),
     options = list(
-      pageLength = 5,
+      pageLength = 10,
       language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json')
     )
   )
