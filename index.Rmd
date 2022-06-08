@@ -60,10 +60,30 @@ felinos %>%
   )
 ```
 
-```{r}
+# Gráfico
+```{r gráfico, message=FALSE, echo=FALSE}
+Gráfico_Felinos <-
+  felinos %>%
+  ggplot(aes(x = species)) +
+  geom_bar() +
+  ggtitle("Cantidad de felinos") +
+  xlab("Species") +
+  ylab("Count") +
+  theme_minimal()
 
+ggplotly(Gráfico_Felinos) %>% config(locale = 'es')
 ```
 
-# Gráfico
-
 # Mapa
+```{r}
+leaflet() %>%
+  addTiles() %>% # capa de base
+  addCircleMarkers( # capa de registros de presencia (puntos)
+    data = felinos, 
+    stroke = F,
+    radius = 4, 
+    fillColor = "blue",
+    fillOpacity = 1
+    )
+```
+
