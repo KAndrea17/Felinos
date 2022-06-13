@@ -2,13 +2,31 @@
 title: "Datos de felinos de Costa Rica"
 author: "Andrea Padilla"
 date: '2022-06-08'
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
+    theme: readable
+    toc: true
+    toc_depth: 5
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-# Preparativos
+# Introducción
+
+
+## Herramientas de desarrollo
+
+### Paquetes de R
+
+
+```{r carga-paquetes, message=FALSE}
+```
+
 
 ```{r carga-paquetes, message=FALSE}
 library(sf)
@@ -17,6 +35,19 @@ library(leaflet)
 library(ggplot2)
 library(plotly)
 library(DT)
+```
+
+```{r datos}
+provincias <- # objeto sf de datos vectoriales con geometrías de multipolígonos
+  st_read(
+    "C:/Users/gf0604-1/datos geoespaciales/clase 08-06-22/provincias.geojson", # archivo de datos de entrada
+    quiet = TRUE
+  ) %>%
+  st_transform(4326) # transformación al sistema de coordenadas WGS84
+```
+
+
+```{r carga-paquetes, message=FALSE}
 ```
 
 ```{r}
@@ -28,8 +59,9 @@ felinos <-
       "Y_POSSIBLE_NAMES=decimalLatitude"   # columna de latitud decimal
     ),
     quiet = TRUE
-  )
+  ) 
 
+ st_crs(felinos)<-4326
 ```
 
 # Tabla
@@ -62,22 +94,32 @@ felinos %>%
 
 # Gráfico
 ```{r gráfico, message=FALSE, echo=FALSE}
-Gráfico_Felinos <-
+grafico_felinos <-
   felinos %>%
-  ggplot(aes(x = species)) +
-  geom_bar() +
+  count(species) %>%
+  ggplot(aes(x = reorder(species, n), y = n)) +
+  geom_bar(stat = "identity") +
   ggtitle("Cantidad de felinos") +
-  xlab("Species") +
-  ylab("Count") +
+  xlab("Cantidad") +
+  ylab("Felinos") +
+  coord_flip() + #cambiar ejes
   theme_minimal()
 
-ggplotly(Gráfico_Felinos) %>% config(locale = 'es')
+ggplotly(grafico_felinos)
+
 ```
 
 # Mapa
 ```{r}
 leaflet() %>%
-  addTiles() %>% # capa de base
+  addTiles() %>% # capa de base OSM
+  # addPolygons(
+  #   data = provincias,
+  #   color = "black",
+  #   fillColor = "transparent",
+  #   stroke = TRUE,
+  #   weight = 1.0,
+  # ) %>%
   addCircleMarkers( # capa de registros de presencia (puntos)
     data = felinos, 
     stroke = F,
@@ -85,5 +127,8 @@ leaflet() %>%
     fillColor = "blue",
     fillOpacity = 1
     )
+```
+```{r}
+
 ```
 
